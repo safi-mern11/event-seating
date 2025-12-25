@@ -14,6 +14,13 @@ export function useSelection({ onSelectionChange }: UseSelectionProps = {}) {
   const [selectedSeatIds, setSelectedSeatIds] = useLocalStorage<string[]>(STORAGE_KEY, []);
   const [selectedSeats, setSelectedSeats] = useLocalStorage<SelectedSeat[]>(STORAGE_KEY_DETAILS, []);
 
+  // Debug: log what we loaded from localStorage
+  useEffect(() => {
+    console.log('🔄 Cart loaded from localStorage:');
+    console.log('  - Seat IDs:', selectedSeatIds);
+    console.log('  - Seat Details:', selectedSeats);
+  }, []);
+
   const isSelected = useCallback(
     (seatId: string) => selectedSeatIds.includes(seatId),
     [selectedSeatIds]
@@ -32,12 +39,23 @@ export function useSelection({ onSelectionChange }: UseSelectionProps = {}) {
 
       if (isCurrentlySelected) {
         // Remove seat
+        console.log('❌ Removing seat:', seat.id);
         setSelectedSeatIds(prev => prev.filter(id => id !== seat.id));
         setSelectedSeats(prev => prev.filter(s => s.id !== seat.id));
       } else if (selectedSeatIds.length < MAX_SELECTION) {
         // Add seat
-        setSelectedSeatIds(prev => [...prev, seat.id]);
-        setSelectedSeats(prev => [...prev, { ...seat, section, row }]);
+        const seatWithDetails = { ...seat, section, row };
+        console.log('✅ Adding seat:', seat.id, seatWithDetails);
+        setSelectedSeatIds(prev => {
+          const newIds = [...prev, seat.id];
+          console.log('  → New IDs array:', newIds);
+          return newIds;
+        });
+        setSelectedSeats(prev => {
+          const newSeats = [...prev, seatWithDetails];
+          console.log('  → New Seats array:', newSeats);
+          return newSeats;
+        });
       }
     },
     [selectedSeatIds, setSelectedSeatIds, setSelectedSeats]
