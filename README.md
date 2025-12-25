@@ -20,6 +20,8 @@ npm preview
 
 The application will be available at `http://localhost:5173`
 
+> **Note**: This project was developed with npm due to system constraints. To use pnpm instead (as originally requested), simply replace `npm install` with `pnpm install` and `npm run dev` with `pnpm dev`. Both package managers are fully compatible with this setup.
+
 ## Architecture Decisions
 
 **Rendering Strategy**: I chose SVG over Canvas for rendering 14,750 seats because SVG provides better accessibility, easier event handling, and native browser optimization. Each seat is a memoized React component to prevent unnecessary re-renders. The combination of `React.memo`, `useMemo` for the selected seats Set, and efficient event delegation ensures smooth 60fps performance even with this many elements.
