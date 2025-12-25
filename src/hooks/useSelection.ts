@@ -4,6 +4,7 @@ import type { Seat, SelectedSeat } from '../types/venue';
 
 const MAX_SELECTION = 8;
 const STORAGE_KEY = 'selected-seats';
+const STORAGE_KEY_DETAILS = 'selected-seats-details';
 
 interface UseSelectionProps {
   onSelectionChange?: (seats: SelectedSeat[]) => void;
@@ -11,7 +12,7 @@ interface UseSelectionProps {
 
 export function useSelection({ onSelectionChange }: UseSelectionProps = {}) {
   const [selectedSeatIds, setSelectedSeatIds] = useLocalStorage<string[]>(STORAGE_KEY, []);
-  const [selectedSeats, setSelectedSeats] = useState<SelectedSeat[]>([]);
+  const [selectedSeats, setSelectedSeats] = useLocalStorage<SelectedSeat[]>(STORAGE_KEY_DETAILS, []);
 
   const isSelected = useCallback(
     (seatId: string) => selectedSeatIds.includes(seatId),
@@ -27,37 +28,25 @@ export function useSelection({ onSelectionChange }: UseSelectionProps = {}) {
     (seat: Seat, section: string, row: string) => {
       if (seat.status !== 'available') return;
 
-      setSelectedSeatIds(prev => {
-        const isCurrentlySelected = prev.includes(seat.id);
+      const isCurrentlySelected = selectedSeatIds.includes(seat.id);
 
-        if (isCurrentlySelected) {
-          return prev.filter(id => id !== seat.id);
-        } else if (prev.length < MAX_SELECTION) {
-          return [...prev, seat.id];
-        }
-
-        return prev;
-      });
-
-      setSelectedSeats(prev => {
-        const isCurrentlySelected = prev.some(s => s.id === seat.id);
-
-        if (isCurrentlySelected) {
-          return prev.filter(s => s.id !== seat.id);
-        } else if (prev.length < MAX_SELECTION) {
-          return [...prev, { ...seat, section, row }];
-        }
-
-        return prev;
-      });
+      if (isCurrentlySelected) {
+        // Remove seat
+        setSelectedSeatIds(prev => prev.filter(id => id !== seat.id));
+        setSelectedSeats(prev => prev.filter(s => s.id !== seat.id));
+      } else if (selectedSeatIds.length < MAX_SELECTION) {
+        // Add seat
+        setSelectedSeatIds(prev => [...prev, seat.id]);
+        setSelectedSeats(prev => [...prev, { ...seat, section, row }]);
+      }
     },
-    [setSelectedSeatIds]
+    [selectedSeatIds, setSelectedSeatIds, setSelectedSeats]
   );
 
   const clearSelection = useCallback(() => {
     setSelectedSeatIds([]);
     setSelectedSeats([]);
-  }, [setSelectedSeatIds]);
+  }, [setSelectedSeatIds, setSelectedSeats]);
 
   const remainingSlots = MAX_SELECTION - selectedSeatIds.length;
 
