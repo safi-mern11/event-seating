@@ -1,7 +1,7 @@
-import { memo } from 'react';
-import { motion } from 'framer-motion';
-import type { Seat, SeatStatus } from '../../types/venue';
-import { formatPrice, getPriceForTier } from '../../utils/pricing';
+import { memo } from "react";
+import { motion } from "framer-motion";
+import type { Seat, SeatStatus } from "../../types/venue";
+import { formatPrice, getPriceForTier } from "../../utils/pricing";
 
 interface SeatDetailsProps {
   seat: Seat | null;
@@ -10,17 +10,17 @@ interface SeatDetailsProps {
 }
 
 const STATUS_LABELS: Record<SeatStatus, string> = {
-  available: 'Available',
-  reserved: 'Reserved',
-  sold: 'Sold',
-  held: 'On Hold',
+  available: "Available",
+  reserved: "Reserved",
+  sold: "Sold",
+  held: "On Hold",
 };
 
 const STATUS_COLORS: Record<SeatStatus, string> = {
-  available: 'from-emerald-500 to-green-600',
-  reserved: 'from-amber-500 to-orange-600',
-  sold: 'from-gray-500 to-gray-600',
-  held: 'from-purple-500 to-purple-600',
+  available: "from-emerald-500 to-green-600",
+  reserved: "from-amber-500 to-orange-600",
+  sold: "from-gray-500 to-gray-600",
+  held: "from-purple-500 to-purple-600",
 };
 
 const SeatDetails = memo(({ seat, section, row }: SeatDetailsProps) => {
@@ -39,11 +39,16 @@ const SeatDetails = memo(({ seat, section, row }: SeatDetailsProps) => {
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 15,
+              delay: 0.2,
+            }}
           >
             <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
               <svg
-                className="w-12 h-12 text-gray-500"
+                className="w-[24px] h-[24px] text-gray-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -57,15 +62,24 @@ const SeatDetails = memo(({ seat, section, row }: SeatDetailsProps) => {
               </svg>
             </div>
           </motion.div>
-          <h3 className="text-xl font-semibold text-gray-300 mb-2">Select a Seat</h3>
-          <p className="text-gray-500 text-sm">Click on any seat to view its details</p>
+          <h3 className="text-xl font-semibold text-gray-300">
+            Select a Seat
+          </h3>
+          <p className="text-gray-500 text-sm">
+            Click on any seat to view its details
+          </p>
         </div>
       </motion.div>
     );
   }
 
   const price = getPriceForTier(seat.priceTier);
-  const tierName = seat.priceTier === 1 ? 'VIP' : seat.priceTier === 2 ? 'Premium' : 'Standard';
+  const tierName =
+    seat.priceTier === 1
+      ? "VIP"
+      : seat.priceTier === 2
+      ? "Premium"
+      : "Standard";
 
   return (
     <motion.div
@@ -94,28 +108,38 @@ const SeatDetails = memo(({ seat, section, row }: SeatDetailsProps) => {
 
         {/* Section Info */}
         <div className="bg-gradient-to-r from-gray-800/50 to-gray-800/30 rounded-xl p-4 border border-gray-700">
-          <label className="text-sm font-medium text-gray-400 block mb-2">Section</label>
-          <div className="text-2xl font-bold text-white">{section || 'N/A'}</div>
+          <label className="text-sm font-medium text-gray-400 block mb-2">
+            Section
+          </label>
+          <div className="text-2xl font-bold text-white">
+            {section || "N/A"}
+          </div>
         </div>
 
         {/* Row & Seat */}
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-gradient-to-r from-gray-800/50 to-gray-800/30 rounded-xl p-4 border border-gray-700">
-            <label className="text-sm font-medium text-gray-400 block mb-2">Row</label>
+            <label className="text-sm font-medium text-gray-400 block mb-2">
+              Row
+            </label>
             <div className="text-xl font-bold text-white">
-              {row ? row.split('-R')[1] : 'N/A'}
+              {row ? row.split("-R")[1] : "N/A"}
             </div>
           </div>
 
           <div className="bg-gradient-to-r from-gray-800/50 to-gray-800/30 rounded-xl p-4 border border-gray-700">
-            <label className="text-sm font-medium text-gray-400 block mb-2">Seat</label>
+            <label className="text-sm font-medium text-gray-400 block mb-2">
+              Seat
+            </label>
             <div className="text-xl font-bold text-white">{seat.col}</div>
           </div>
         </div>
 
         {/* Price */}
         <div className="bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20 rounded-xl p-4 border border-purple-500/50">
-          <label className="text-sm font-medium text-purple-300 block mb-2">Price</label>
+          <label className="text-sm font-medium text-purple-300 block mb-2">
+            Price
+          </label>
           <div className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             {formatPrice(price)}
           </div>
@@ -124,9 +148,15 @@ const SeatDetails = memo(({ seat, section, row }: SeatDetailsProps) => {
 
         {/* Status */}
         <div className="bg-gradient-to-r from-gray-800/50 to-gray-800/30 rounded-xl p-4 border border-gray-700">
-          <label className="text-sm font-medium text-gray-400 block mb-2">Status</label>
+          <label className="text-sm font-medium text-gray-400 block mb-2">
+            Status
+          </label>
           <div>
-            <span className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-bold text-white bg-gradient-to-r ${STATUS_COLORS[seat.status]} shadow-lg`}>
+            <span
+              className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-bold text-white bg-gradient-to-r ${
+                STATUS_COLORS[seat.status]
+              } shadow-lg`}
+            >
               {STATUS_LABELS[seat.status]}
             </span>
           </div>
@@ -136,6 +166,6 @@ const SeatDetails = memo(({ seat, section, row }: SeatDetailsProps) => {
   );
 });
 
-SeatDetails.displayName = 'SeatDetails';
+SeatDetails.displayName = "SeatDetails";
 
 export default SeatDetails;
