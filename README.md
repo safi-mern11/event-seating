@@ -85,19 +85,42 @@ src/
 
 ## Features Implemented
 
-✅ 14,750 seat rendering at 60fps
-✅ Click to select/deselect (max 8 seats)
-✅ Keyboard navigation with Tab and Enter
-✅ Visual feedback for selection, hover, and focus
-✅ Seat details panel with section, row, price
-✅ Live selection summary with subtotal
-✅ LocalStorage persistence across sessions
-✅ Accessibility with ARIA labels and focus management
-✅ Responsive layout (desktop and mobile)
-✅ Zoom controls for map navigation
-✅ Status-based color coding (available/reserved/sold/held)
-✅ Price tier visualization ($150/$100/$50)
+✅ **Dynamic Seat Count (500 - 15,000 seats)** - Interactive control panel to test performance
+✅ **Automatic Virtualization** - react-window kicks in for >5,000 seats for 60fps performance
+✅ **Realistic SVG Theater Chairs** - Beautiful 3D-style chairs with armrests, cushions, backrest
+✅ **Click & Keyboard Selection** - Tab to navigate, Enter/Space to select (max 8 seats)
+✅ **Visual Feedback** - Hover animations, focus rings, selection glow effects
+✅ **Seat Details Panel** - Shows section, row, price on click/focus
+✅ **Live Cart Summary** - Real-time subtotal and animated seat removal
+✅ **localStorage Persistence** - Selections survive page reloads
+✅ **Full Accessibility** - ARIA labels, keyboard navigation, screen reader support
+✅ **Responsive Design** - Works on desktop (1920x1080) and mobile (375x667)
+✅ **Status Color Coding** - Available (green), Reserved (amber), Sold (gray), Held (purple)
+✅ **Price Tier Borders** - Gold ($150 VIP), Silver ($100 Premium), Bronze ($50 Standard)
+✅ **Animated Stage** - Beautiful theater stage with spotlights and curtains
+✅ **Performance Indicators** - Shows virtualization status and total seat count
+
+## Interactive Venue Configuration
+
+At the top of the app, you'll find a **Venue Configuration Panel** that lets you:
+
+1. **Adjust Seat Count**: Use the slider to set anywhere from 500 to 15,000 seats
+2. **Quick Presets**: One-click buttons for Small (1.6K), Medium (5K), Large (10K), and Max (15K)
+3. **Live Generation**: Venue regenerates instantly when you click "Apply"
+4. **Performance Mode**: Automatically switches to virtualized rendering for >5,000 seats
+
+This feature is perfect for demonstrating to interviewers how the app handles different scales with optimal performance strategies.
 
 ## Data Generation
 
-The `scripts/generate-venue.js` file creates realistic venue data with proper seat positioning. Running `node scripts/generate-venue.js` regenerates `public/venue.json` with configurable sections, rows, and seat distribution.
+The `scripts/generate-venue.js` file creates realistic venue data with proper seat positioning:
+
+```bash
+# Generate default venue (1,635 seats)
+node scripts/generate-venue.js
+
+# Generate custom seat count (e.g., 15,000 seats)
+node scripts/generate-venue.js 15000
+```
+
+The venue data is also generated **dynamically in-browser** when you use the configuration panel, so you can test different scales without running scripts.

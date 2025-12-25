@@ -1,14 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import type { Venue, Section, Seat } from '../types/venue';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const statuses = ['available', 'reserved', 'sold', 'held'];
+const statuses: Seat['status'][] = ['available', 'reserved', 'sold', 'held'];
 const statusWeights = [0.65, 0.20, 0.10, 0.05];
 
-function getRandomStatus() {
+function getRandomStatus(): Seat['status'] {
   const rand = Math.random();
   let cumulative = 0;
 
@@ -22,8 +17,14 @@ function getRandomStatus() {
   return statuses[0];
 }
 
-function generateSection(sectionId, sectionName, rowCount, seatsPerRow, priceTier) {
-  const sectionData = {
+function generateSection(
+  sectionId: string,
+  sectionName: string,
+  rowCount: number,
+  seatsPerRow: number,
+  priceTier: 1 | 2 | 3
+): Section {
+  const sectionData: Section = {
     id: sectionId,
     name: sectionName,
     rows: []
@@ -33,7 +34,7 @@ function generateSection(sectionId, sectionName, rowCount, seatsPerRow, priceTie
     const rowId = `${sectionId}-R${r + 1}`;
     const rowData = {
       id: rowId,
-      seats: []
+      seats: [] as Seat[]
     };
 
     // Vary seats per row slightly for realism (10-15 seats)
@@ -58,8 +59,8 @@ function generateSection(sectionId, sectionName, rowCount, seatsPerRow, priceTie
   return sectionData;
 }
 
-function generateVenue(targetSeatCount = 1635) {
-  const sections = [];
+export function generateVenue(targetSeatCount = 1635): Venue {
+  const sections: Section[] = [];
 
   // Calculate section parameters based on target seat count
   // Distribution: 20% Orchestra, 30% Mezzanine, 25% Balcony Left, 25% Balcony Right
@@ -70,7 +71,7 @@ function generateVenue(targetSeatCount = 1635) {
 
   // Calculate rows and seats per row dynamically
   // Keep seats per row between 10-15 for good visuals
-  const calcRowsAndSeats = (totalSeats) => {
+  const calcRowsAndSeats = (totalSeats: number) => {
     const seatsPerRow = Math.min(15, Math.max(10, Math.ceil(Math.sqrt(totalSeats))));
     const rows = Math.ceil(totalSeats / seatsPerRow);
     return { rows, seatsPerRow };
@@ -113,17 +114,4 @@ function generateVenue(targetSeatCount = 1635) {
     },
     sections
   };
-}
-
-// Export for programmatic use
-export { generateVenue, getRandomStatus };
-
-// CLI usage
-if (import.meta.url === `file://${process.argv[1]}`) {
-  const targetSeatCount = process.argv[2] ? parseInt(process.argv[2], 10) : 1635;
-  const venue = generateVenue(targetSeatCount);
-  const outputPath = path.join(__dirname, '..', 'public', 'venue.json');
-  fs.writeFileSync(outputPath, JSON.stringify(venue, null, 2));
-
-  console.log(`\nVenue data written to ${outputPath}`);
 }
