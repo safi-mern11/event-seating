@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import SeatingMap from './components/SeatingMap/SeatingMap';
 import SelectionSummary from './components/SelectionSummary/SelectionSummary';
 import SeatDetails from './components/SeatDetails/SeatDetails';
@@ -33,22 +34,34 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-gray-600 font-medium">Loading seating map...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-black">
+        <motion.div
+          className="text-center"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <div className="relative">
+            <div className="w-20 h-20 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin mx-auto"></div>
+            <div className="absolute inset-0 w-16 h-16 m-auto border-4 border-pink-500/30 border-t-pink-500 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1s' }}></div>
+          </div>
+          <p className="text-white font-semibold text-lg mt-6">Loading venue...</p>
+          <p className="text-purple-300 text-sm mt-2">Preparing 14,750 seats for you</p>
+        </motion.div>
       </div>
     );
   }
 
   if (error || !venue) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md">
-          <div className="text-red-600 mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-red-900 to-black p-4">
+        <motion.div
+          className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl p-8 max-w-md border border-red-500/50"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="text-red-500 mb-6">
             <svg
-              className="h-12 w-12 mx-auto"
+              className="h-16 w-16 mx-auto"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -61,18 +74,29 @@ function App() {
               />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-800 text-center mb-2">
-            Failed to Load Venue
+          <h2 className="text-2xl font-bold text-white text-center mb-3">
+            Unable to Load Venue
           </h2>
-          <p className="text-gray-600 text-center">{error || 'Unknown error occurred'}</p>
-        </div>
+          <p className="text-gray-400 text-center">{error || 'Unknown error occurred'}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="w-full mt-6 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-semibold py-3 px-6 rounded-xl transition-all"
+          >
+            Retry
+          </button>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-4 md:p-6">
+      <motion.div
+        className="max-w-[1920px] mx-auto"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <SeatingMap
@@ -97,7 +121,7 @@ function App() {
             />
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
