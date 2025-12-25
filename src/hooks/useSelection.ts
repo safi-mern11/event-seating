@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import type { Seat, SelectedSeat } from '../types/venue';
 
