@@ -61,3 +61,7 @@ p{
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #A855F7, #EC4899);
 }
+
+button{
+  cursor: pointer;
+}

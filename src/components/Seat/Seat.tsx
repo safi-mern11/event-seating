@@ -20,6 +20,13 @@ const Seat = memo(({ seat, isSelected, onClick, section, row }: SeatProps) => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (isAvailable && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   const getChairColor = () => {
     if (isSelected) return { seat: '#3B82F6', back: '#2563EB', base: '#1E40AF' };
     if (isHovered && isAvailable) return { seat: '#34D399', back: '#10B981', base: '#059669' };
@@ -49,10 +56,13 @@ const Seat = memo(({ seat, isSelected, onClick, section, row }: SeatProps) => {
 
   return (
     <motion.div
-      className={`relative flex items-center justify-center ${isAvailable ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+      className={`relative flex items-center justify-center ${isAvailable ? 'cursor-pointer' : 'cursor-not-allowed'} focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-lg`}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onFocus={() => setIsHovered(true)}
+      onBlur={() => setIsHovered(false)}
       whileHover={isAvailable ? { scale: 1.2, zIndex: 50 } : {}}
       whileTap={isAvailable ? { scale: 0.95 } : {}}
       transition={{ type: "spring", stiffness: 400, damping: 17 }}
